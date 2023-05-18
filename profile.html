@@ -19,7 +19,7 @@
     </style>
 </head>
 
-<body>
+<body onload="getData()">
     <!--NAVEGACION-->
     <div class="menu">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -76,11 +76,7 @@
                         <div class="formContainer">
 
                             <form action="eventos.html">
-                                <div class="form-group mt-3">
-                                    <label class="mb-2" for="email">e-Mail</label>
-                                    <input class="form-control transparente" id="email" disabled="disabled" name="email"
-                                        type="email" placeholder="email" />
-                                </div>
+                               
                                 <div class="form-group mt-3">
                                     <label class="mb-2" for="user">Nombre de Usuario</label>
                                     <input class="form-control transparente" id="user" name="user" disabled="disabled"
@@ -119,7 +115,49 @@
     </div>
     <!-- Enlace al archivo JavaScript de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script>
+        async function getData() {
+            try {
+                // Obtener el valor de la cookie "EVENTUSER"
+                const cookies = document.cookie.split('; ');
+                let name = '';
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].split('=');
+                    if (cookie[0] === 'EVENTUSER') {
+                        name = cookie[1];
+                        break;
+                    }
+                }
+    
+                // Realizar la llamada a la API para obtener los datos
+                const response = await fetch(`https://apievent.azurewebsites.net/api/GetUser?name=${encodeURIComponent(name)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    // Puedes agregar cualquier otro encabezado o parámetro necesario para tu API
+                });
+    
+                // Manejar la respuesta de la API
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Datos:', data);
+    
+                    // Mostrar los datos en los campos de entrada del formulario
+                    document.getElementById('password').value = data.clave;
+                    document.getElementById('user').value = data.username;
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('surname').value = data.surname;
+                } else {
+                    throw new Error('Error en la solicitud');
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert('Error en la solicitud. Por favor, intenta nuevamente.');
+            }
+        }
+    </script>
+    
 </body>
 
 </html>

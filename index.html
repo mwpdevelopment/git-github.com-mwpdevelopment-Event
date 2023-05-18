@@ -44,15 +44,15 @@
                         <div class="formContainer">
                             <form action="eventos.html">
                                 <div class="form-group mt-3">
-                                    <label class="mb-2" for="email">e-Mail</label>
-                                    <input class="form-control transparente" id="email" name="email" type="email"  placeholder="email"/>
+                                    <label class="mb-2" for="user">e-Mail</label>
+                                    <input class="form-control transparente" id="user" name="user" type="user"  placeholder="user"/>
                                 </div>
                                 <div class="form-group mt-3">
                                     <label class="mb-2" for="password">Password</label>
                                     <input class="form-control transparente" id="password" name="password" type="password" />
                                 </div>
                                 <div class="form-group mt-3">
-                                    <button class="btn btn-outline-primary btn-lg w-100 mt-4">Entrar</button>
+                                    <button class="btn btn-outline-primary btn-lg w-100 mt-4" onclick="Login()">Entrar</button>
                                 </div>
                                 <div class="form-group mt-3">
                                     <p>¿No estás registrado?
@@ -68,6 +68,39 @@
     </div>
     <!-- Enlace al archivo JavaScript de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function Login() {
+            try {   
+                const user = document.getElementById('user').value;
+                const password = document.getElementById('password').value;
+                // Realizar la llamada a la API para obtener los datos
+                
+                const url = `https://apievent.azurewebsites.net/api/GetUser?name=${encodeURIComponent(user)}&clave=${encodeURIComponent(password)}`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    // Puedes agregar cualquier otro encabezado o parámetro necesario para tu API
+                });
+    
+                // Manejar la respuesta de la API
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Datos:', data);
+                    document.cookie = `EVENTUSER=${JSON.stringify(data.username)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;    
+                    window.location.replace('eventos.html');
+
+
+                } else {
+                    throw new Error('Error en la solicitud');
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert('Error en la solicitud. Por favor, intenta nuevamente.');
+            }
+        }
+    </script>
 </body>
 
 </html>

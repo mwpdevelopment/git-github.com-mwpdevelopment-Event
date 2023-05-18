@@ -96,6 +96,7 @@
                     if(result==-1){
                         alert('El usuario ya existe');
                     }else{
+                        document.cookie = `EVENTUSER=${JSON.stringify(response.text)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
                         alert('Bienvenido'+response.text+' Revisa que tus datos estén correctos.');
                         window.location.replace('profile.html?user='+result);
                     }
