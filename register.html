@@ -97,7 +97,7 @@
                         alert('El usuario ya existe');
                     }else{
                         alert('Bienvenido'+response.text+' Revisa que tus datos estén correctos.');
-                        window.location.replace('profile.html');
+                        window.location.replace('profile.html?user='+result);
                     }
                 } else {
                     throw new Error('Error en la solicitud');
