@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    
+    <script src="./store/js/common.js"></script>
     <!-- Estilos personalizados -->
     <link rel="stylesheet" type="text/css" href="./style.css"  />
     
@@ -39,27 +39,29 @@
         <div class="p-4">
             <div class="container">
                 <div class="row">
-                    <h1 class="p-3 text-center">Welcome to e-Vent</h1>                            
+
                     <div class="col-lg-12 col-md-12 col-sm-8 col-lg-3 mx-auto">
-                        <div class="formContainer">
-                            <form action="eventos.html">
+                        <div class="form-container">
+                            <div class="title">
+                                Login   
+                            </div>
                                 <div class="form-group mt-3">
                                     <label class="mb-2" for="user">e-Mail</label>
-                                    <input class="form-control transparente" id="user" name="user" type="user"  placeholder="user"/>
+                                    <input class="form-control " id="user" name="user" type="user"  placeholder="user"/>
                                 </div>
                                 <div class="form-group mt-3">
                                     <label class="mb-2" for="password">Password</label>
-                                    <input class="form-control transparente" id="password" name="password" type="password" />
+                                    <input class="form-control " id="password" name="password" type="password" />
                                 </div>
                                 <div class="form-group mt-3">
                                     <button class="btn btn-outline-primary btn-lg w-100 mt-4" onclick="Login()">Entrar</button>
                                 </div>
                                 <div class="form-group mt-3">
-                                    <p>¿No estás registrado?
-                                        <a href="./register.html">REGISTRATE!</a>
-                                    </p>
+                                    <div class="register">
+                                        <a href="./register.html">¿Aun no eres usuario registrado?</a>
+                                    </div>
                                 </div>
-                            </form>
+                            
                         </div>
                     </div>
                 </div>
@@ -87,6 +89,7 @@
                 // Manejar la respuesta de la API
                 if (response.ok) {
                     const data = await response.json();
+
                     console.log('Datos:', data);
                     document.cookie = `EVENTUSER=${JSON.stringify(data.username)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;    
                     window.location.replace('eventos.html');
