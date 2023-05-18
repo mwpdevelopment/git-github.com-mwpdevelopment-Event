@@ -60,6 +60,7 @@
     </div>
     <!-- Enlace al archivo JavaScript de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         async function submitForm() {
             try{
@@ -96,7 +97,7 @@
                         alert('El usuario ya existe');
                     }else{
                         alert('Bienvenido'+response.text+' Revisa que tus datos estén correctos.');
-                        window.location.href = 'profile.html';
+                        window.location.replace('profile.html');
                     }
                 } else {
                     throw new Error('Error en la solicitud');
