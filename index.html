@@ -53,6 +53,10 @@
                                     <label class="mb-2" for="password">Password</label>
                                     <input class="form-control " id="password" name="password" type="password" />
                                 </div>
+                                <div class="form-group">
+                                    <p id="error_user" class="text-danger d-none">Nombre de usuario o contraseña incorrecto.</p>
+                                </div>
+
                                 <div class="form-group mt-3">
                                     <button class="btn btn-outline-primary btn-lg w-100 mt-4" onclick="Login()">Entrar</button>
                                 </div>
@@ -89,14 +93,11 @@
                 // Manejar la respuesta de la API
                 if (response.ok) {
                     const data = await response.json();
-
-                    console.log('Datos:', data);
-                    document.cookie = `EVENTUSER=${JSON.stringify(data.username)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;    
-                    window.location.replace('eventos.html');
-
-
+                    sessionStorage.setItem("USER",data.nombre);
+                    window.location.href='eventos.html';
                 } else {
-                    throw new Error('Error en la solicitud');
+                    const errorText = document.getElementById('error_user');
+                    errorText.classList.remove('d-none');  // Muestra el mensaje de error
                 }
             } catch (error) {
                 console.error('Error en la solicitud:', error);
