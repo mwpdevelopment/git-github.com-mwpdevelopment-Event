@@ -17,7 +17,7 @@
     </style>
 </head>
 
-<body>
+<body onload="GetEvento();">
      <!--NAVEGACION-->
      <div class="menu">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -73,21 +73,10 @@
               <div class="col-lg-12 col-md-12 col-sm-8 col-lg-6 mx-auto">
                 <div class="card mb-4">
                   <div id="eventCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                      <!-- Ejemplo de diapositiva del carrusel -->
-                      <div class="carousel-item active">
-                        <img src="./event_Images/th-0.jpg" class="d-block w-100" alt="Imagen del Evento 1">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="./event_Images/th-1.jpg" class="d-block w-100" alt="Imagen del Evento 2">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="./event_Images/th-2.jpg" class="d-block w-100" alt="Imagen del Evento 2">
-                      </div>
-                      <div class="carousel-item">
-                        <img src="./event_Images/th-3.jpg" class="d-block w-100" alt="Imagen del Evento 2">
-                      </div>
-                      <!-- Agrega más diapositivas según el número de imágenes del evento -->
+                    <div class="carousel-inner" id="carrusel">
+                      <!-- Carrusel -->
+
+
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -98,10 +87,11 @@
                       <span class="visually-hidden">Siguiente</span>
                     </button>
                   </div>
+
                   <div class="card-body">
-                    <h5 class="card-title">Título del Evento</h5>
-                    <p class="card-text">Pellentesque luctus tortor in interdum sollicitudin. Praesent id metus libero. Suspendisse quam est, commodo id justo et, imperdiet maximus dolor. Nulla tortor augue, eleifend quis venenatis vel, efficitur porta tortor. Donec mollis, nisl non accumsan pellentesque, nisi erat congue dolor, vitae porta neque nisl fermentum ligula. Nulla convallis diam finibus, varius nisi in, placerat nisi. Pellentesque fringilla non justo sit amet rhoncus. Vestibulum iaculis dolor vitae enim ultrices imperdiet. Mauris dignissim lectus lorem, sed efficitur ex volutpat quis.</p>
-                    <p class="card-text">16/05/2023</p>
+                    <h5 class="card-title" id="nombre"></h5>
+                    <p class="card-text" id="descripcion"></p>
+                    <p class="card-text" id="fecha"></p>
                     <button class="btn btn-primary">Registrarse</button>
                   </div>
                 </div>
@@ -113,6 +103,55 @@
       
     <!-- Enlace al archivo JavaScript de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      async function GetEvento() {
+
+        try {         
+            var user = sessionStorage.getItem("USER");
+  
+            if (user=='' || user==null){
+              window.location.replace('index.html');
+            }
+            var id = location.href.split('?')[1];
+            // Realizar la llamada a la API para obtener los datos        
+            const url = `https://apievent.azurewebsites.net/api/GetEvent?id=${encodeURIComponent(id)}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+            });
+
+            // Manejar la respuesta de la API
+            if (response.ok) {            
+                const data = await response.json();
+                  var imagen="default.jpg";
+                  if(data.imagenes.length>0){
+                    data.imagenes.forEach(imagen=>{
+                      const htmlcarrusel = "<div class='carousel-item active'>"+
+                                            "  <img src='./event_Images/"+imagen.rutaImagen+"' class='d-block w-100' >"+
+                                            "</div>"
+                    });
+                    document.getElementById("carrusel").innerHTML+=htmlcarrusel;
+                  }else{
+                    const htmlcarrusel = "<div class='carousel-item active'>"+
+                                            "  <img src='./event_Images/default.jpg' class='d-block w-100' >"+
+                                            "</div>";
+                    document.getElementById("carrusel").innerHTML+=htmlcarrusel;
+                  }
+                  document.getElementById("nombre").innerHTML=data.nombre;
+                  document.getElementById("descripcion").innerHTML=data.descripcion;
+                  document.getElementById("fecha").innerHTML=data.fechaEvento;
+                
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            alert('Error en la solicitud. Por favor, intenta nuevamente.');
+        }
+
+}
+    </script>
 </body>
 
 </html>
