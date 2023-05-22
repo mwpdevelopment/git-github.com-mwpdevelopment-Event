@@ -8,6 +8,10 @@ function Load(){
         window.location.replace('index.html');
     }
 
+
+    const htmluser = "<a href='profile.html?"+user+"' id='nombreusuario'>"+user+"</a>";
+    document.getElementById("nombreusuario").href="profile.html?"+user;
+    document.getElementById("nombreusuario").innerHTML=user;
    
     if(window.location.href.includes("miseventos.html"))
     {
@@ -60,7 +64,7 @@ async function GetEvents(tipo, fecha,user) {
             datos.forEach(data => {
                 var imagen="default.jpg";
                 if(data.imagenes.length>0){
-                    imagen=data.Imagenes[0].RutaImagen;
+                    imagen=data.imagenes[0].rutaImagen;
                 }
                 const html = "<!-- TARJETA EVENTO -->"+
                 "<div class='col-lg-4 col-md-6 col-sm-12'>"+
