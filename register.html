@@ -109,9 +109,9 @@
                         if(result==-1){
                             alert('El usuario ya existe');
                         }else{
-                            document.cookie = `EVENTUSER=${JSON.stringify(result)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
-                            alert('Bienvenido '+result+'. Revisa que tus datos estén correctos.');
-                            window.location.replace('profile.html?user='+result);
+                            document.cookie = `EVENTUSER=${JSON.stringify(user)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+                            alert('Bienvenido '+user+'. Revisa que tus datos estén correctos.');
+                            window.location.replace('profile.html?user='+user);
                         }
                     } else {
                         throw new Error('Error en la solicitud');
