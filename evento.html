@@ -215,7 +215,8 @@
                     Swal.fire('Evento creado exitosamente.');
                     window.location.replace('verevento.html?'+result.id);
                 } else {
-                    throw new Error('Error en la solicitud');
+                    Swal.fire('Error en la solicitud. Por favor, intenta nuevamente.');
+
                 }
             } catch (error) {
                 console.error('Error en la solicitud:', error);

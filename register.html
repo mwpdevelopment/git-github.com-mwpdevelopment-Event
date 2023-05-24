@@ -110,12 +110,13 @@
                         if(result==-1){
                             Swal.fire('El usuario ya existe');
                         }else{
-                            document.cookie = `EVENTUSER=${JSON.stringify(user)}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+                            sessionStorage.setItem("USER",user);
+
                             Swal.fire('Bienvenido '+user+'. Revisa que tus datos estén correctos.');
                             window.location.replace('profile.html?user='+user);
                         }
                     } else {
-                        throw new Error('Error en la solicitud');
+                        Swal.fire('Error en la solicitud');
                     }
                 }
                 

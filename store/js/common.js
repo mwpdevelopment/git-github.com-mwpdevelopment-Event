@@ -81,7 +81,7 @@ async function GetEvents(tipo, fecha,user) {
                 "				"+data.descripcion+
                 "			</p>"+
                 "			<p class='card-text'>"+data.fechaEvento+"'</p>"+
-                "			<button class='btn btn-primary'>Apuntarse</button>"+
+                "			<a class='btn btn-primary' href='pagoevento.html?"+data.id+"'>Apuntarse</a>"+
                 "		</div>"+
                 "	</div>"+
                 "</div>"+

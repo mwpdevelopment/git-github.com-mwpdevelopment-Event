@@ -73,26 +73,29 @@
                     <h2>Pago del evento</h2>
                     
                     <div class="form-group">
-                    <label for="cardNumber">Número de Tarjeta:</label>
-                    <input type="text" class="form-control" id="cardNumber" placeholder="Ingrese el número de tarjeta" onchange="validateCardNumber()">
+                        <label for="cardNumber">Número de Tarjeta:</label>
+                        <input type="text" class="form-control" id="cardNumber" placeholder="Ingrese el número de tarjeta" onchange="validateCardNumber()" oninput="checkrequiredField('cardNumber')"  />
+                        <p id="error_cardNumber" class="text-danger d-none">Campo requerido.</p>
                     </div>
                     <div class="form-group">
-                    <label for="cardName">Nombre en la Tarjeta:</label>
-                    <input type="text" class="form-control" id="cardName" placeholder="Ingrese el nombre en la tarjeta">
+                        <label for="cardName">Nombre en la Tarjeta:</label>
+                        <input type="text" class="form-control" id="cardName" placeholder="Ingrese el nombre en la tarjeta" oninput="checkrequiredField('cardName')"  />
+                        <p id="error_cardName" class="text-danger d-none">Campo requerido.</p>
                     </div>
                     <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="expiryDate">Fecha de Expiración:</label>
-                        <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA">
+                        <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA" oninput="checkrequiredField('expiryDate')"  />
+                        <p id="error_expiryDate" class="text-danger d-none">Campo requerido.</p>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="cvv">CVV:</label>
-                        <input type="text" class="form-control" id="cvv" placeholder="Ingrese el código de seguridad">
+                        <input type="text" class="form-control" id="cvv" placeholder="Ingrese el código de seguridad" oninput="checkrequiredField('cvv')"  />
+                        <p id="error_cvv" class="text-danger d-none">Campo requerido.</p>
                     </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar</button>
-                
-               
+                    <button class="btn btn-outline-primary btn-lg w-100 mt-4" onclick="processForm()">Realizar Pago</button>
+              
                
                 </div>
             </div>
@@ -101,11 +104,11 @@
     <!-- Enlace al archivo JavaScript de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script>
-        function validateCardNumber(event) {
-            event.preventDefault(); // Evitar el envío del formulario
+        function validateCardNumber() {
+            
 
             // Obtener el número de tarjeta ingresado por el usuario
             var cardNumber = document.getElementById('cardNumber').value;
@@ -136,40 +139,63 @@
 
             // Comprobar si el número de tarjeta es válido
             if (sum % 10 !== 0) {
-                Swal.fire('Error', 'El número de tarjeta no es válido', 'error');
+                return false;
             } else {
-                Swal.fire('Éxito', 'El número de tarjeta es válido', 'success');
+                return true;
             }
         }
-
-            
         
         // Función para validar y procesar el formulario
-    function processForm(event) {
-        event.preventDefault(); // Evitar el envío del formulario
+        async function processForm() {
+            var user = sessionStorage.getItem("USER");
+            var id = location.href.split('?')[1];
 
-        // Obtener los valores ingresados por el usuario
-        var cardNumber = document.getElementById('cardNumber').value;
-        var cardName = document.getElementById('cardName').value;
-        var expiryDate = document.getElementById('expiryDate').value;
-        var cvv = document.getElementById('cvv').value;
+           // if(!validateCardNumber()){
+           //     Swal.fire('Error', 'Numero de tarjeta no válido.', 'error');
+           // }
 
-        // Validar los campos (aquí puedes agregar tus propias validaciones según tus requerimientos)
-        if (cardNumber === '' || cardName === '' || expiryDate === '' || cvv === '') {
-            Swal.fire('Error', 'Por favor, complete todos los campos', 'error');
-            return;
+            // Obtener los valores ingresados por el usuario
+            var cardNumber = document.getElementById('cardNumber').value;
+            var cardName = document.getElementById('cardName').value;
+            var expiryDate = document.getElementById('expiryDate').value;
+            var cvv = document.getElementById('cvv').value;
+            var eventid =  location.href.split('?')[1];
+            // Validar los campos (aquí puedes agregar tus propias validaciones según tus requerimientos)
+            if (cardNumber === '' || cardName === '' || expiryDate === '' || cvv === '') {
+                checkrequiredField('cardNumber');
+                checkrequiredField('cardName') 
+                checkrequiredField('expiryDate');
+                checkrequiredField('cvv');
+                Swal.fire('Error', 'Por favor, complete todos los campos', 'error');
+                return;
+            }
+
+            // TODO: llamada al pago y registro
+            var registro = {
+                eventoId:id,
+                usuario:user,
+                usuarioid:0,
+                fechabaja:""
+            };
+         
+            const response = await fetch('https://apievent.azurewebsites.net/api/Registration2Event', {
+                method: 'POST',
+                body:  JSON.stringify(registro),
+            });
+
+            // Manejar la respuesta de la API
+            if (response.ok) {
+                const result = await response.text();
+                    console.log('Respuesta:', result);
+                    Swal.fire('Evento creado exitosamente.');
+                    // para evitar el Hackeo se pasa por session.
+                    sessionStorage.setItem("QR",result);
+                    window.location.replace('qrevento.html');    
+            }else{
+                if(response.status)
+                Swal.fire('Error', 'Por favor, complete todos los campos', 'error');
+            }
         }
-
-        // Enviar los datos al servidor o realizar otras operaciones necesarias
-        // Aquí puedes agregar tu lógica para procesar el pago con los datos de la tarjeta
-
-        // Ejemplo: mostrar una ventana emergente de éxito y reiniciar el formulario
-        Swal.fire('Éxito', 'La solicitud de tarjeta Visa se ha enviado correctamente', 'success');
-        document.getElementById('visaForm').reset();
-        }
-
-    // Asignar el evento submit del formulario a la función de procesamiento
-    document.getElementById('visaForm').addEventListener('submit', processForm);
     </script>
 </body>
 

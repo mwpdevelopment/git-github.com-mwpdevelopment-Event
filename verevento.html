@@ -88,11 +88,12 @@
                     </button>
                   </div>
 
-                  <div class="card-body">
+                  <div id="card-body" class="card-body">
                     <h5 class="card-title" id="nombre"></h5>
                     <p class="card-text" id="descripcion"></p>
                     <p class="card-text" id="fecha"></p>
-                    <button class="btn btn-primary">Registrarse</button>
+                    
+                    
                   </div>
                 </div>
               </div>
@@ -102,7 +103,7 @@
       </div>
       
     <!-- Enlace al archivo JavaScript de Bootstrap -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
       async function GetEvento() {
@@ -116,6 +117,7 @@
             const htmluser = "<a href='profile.html?"+user+"' id='nombreusuario'>"+user+"</a>";
             document.getElementById("nombreusuario").href="profile.html?"+user;
             document.getElementById("nombreusuario").innerHTML=user;
+            
 
             var id = location.href.split('?')[1];
             // Realizar la llamada a la API para obtener los datos        
@@ -151,6 +153,7 @@
                   document.getElementById("nombre").innerHTML=data.nombre;
                   document.getElementById("descripcion").innerHTML=data.descripcion;
                   document.getElementById("fecha").innerHTML=data.fechaEvento;
+                  document.getElementById("card-body").innerHTML+="<a class='btn btn-primary' href='pagoevento.html?"+data.id+"'>Apuntarse</a>";
                 
             }
         } catch (error) {
