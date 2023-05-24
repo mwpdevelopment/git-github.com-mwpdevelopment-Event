@@ -135,7 +135,7 @@
                   if(data.imagenes.length>0){
                     data.imagenes.forEach(imagen=>{
                       const htmlcarrusel = "<div class='carousel-item "+active+"'>"+
-                                            "  <img src='./event_Images/"+imagen.rutaImagen+"' class='d-block w-100' >"+
+                                            "  <img src='https://imagenesevent.blob.core.windows.net/event/"+imagen.rutaImagen+"' class='d-block w-100' >"+
                                             "</div>";
                       document.getElementById("carrusel").innerHTML+=htmlcarrusel;
                       active="";
@@ -143,7 +143,7 @@
                     
                   }else{
                     const htmlcarrusel = "<div class='carousel-item active'>"+
-                                            "  <img src='./event_Images/default.jpg' class='d-block w-100' >"+
+                                            "  <img src='https://imagenesevent.blob.core.windows.net/event/default.jpg' class='d-block w-100' >"+
                                             "</div>";
                     document.getElementById("carrusel").innerHTML+=htmlcarrusel;
                   }

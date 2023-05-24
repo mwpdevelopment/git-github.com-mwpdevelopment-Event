@@ -76,38 +76,41 @@
                             <div class="title">
                                 Crear un Evento
                             </div>
-                            <form action="eventos.html">
-                                <div class="form-group mt-3">
-                                    <label class="mb-2" for="name">Título</label>
-                                    <input class="form-control " id="name" name="name"
-                                        placeholder="Indícanos cómo se llama el evento" />
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label class="mb-2" for="description">Descripción</label>
+                            
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="name">Título</label>
+                                <input class="form-control " id="name" name="name" oninput="checkrequiredField('name')"
+                                    placeholder="Indícanos cómo se llama el evento" />
+                                <p id="error_name" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="description">Descripción</label>
 
-                                    <textarea class="form-control " id="description" name="description"
-                                        rows="5"
-                                        placeholder="Cúrratelo un poco y dinos de qué trata el evento."></textarea>
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label class="mb-2" for="dateevent">Fecha del Evento</label>
-                                    <input class="form-control " id="dateevent" name="dateevent"
-                                        type="date" />
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label class="mb-2">Imágenes</label>
-                                    <input type="file" class="form-control-file" id="images" name="images" multiple />
-                                    <small class="form-text text-muted">Selecciona una o varias imágenes para el
-                                        evento.</small>
-                                </div>
-                                <div class="form-group mt-3">
-                                    <button class="btn btn-outline-primary btn-lg w-100 mt-4">Aceptar</button>
-                                </div>
-                            </form>
+                                <textarea class="form-control " id="description" name="description" oninput="checkrequiredField('description')"
+                                    rows="5"
+                                    placeholder="Cúrratelo un poco y dinos de qué trata el evento."></textarea>
+                                <p id="error_description" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="dateevent">Fecha del Evento</label>
+                                <input class="form-control " id="dateevent" name="dateevent" oninput="checkrequiredField('dateevent')"
+                                    type="date" />
+                                <p id="error_dateevent" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="mb-2">Imágenes</label>
+                                <input type="file" class="form-control-file" id="images" name="images" capture multiple />
+                                <small class="form-text text-muted">Selecciona una o varias imágenes para el
+                                    evento.</small>
+                            </div>
+                            <div class="form-group mt-3">
+                                <button class="btn btn-outline-primary btn-lg w-100 mt-4" onclick="submitForm()">Aceptar</button>
+                            </div>
+                        
 
                             <!-- Carrusel para mostrar las imágenes -->
                             <div id="imageCarousel" class="carousel slide mt-5" data-bs-ride="carousel">
-                                <div class="carousel-inner">
+                                <div class="carousel-inner" id="carrusel">
                                     <!-- Aquí se añadirán las imágenes dinámicamente -->
                                 </div>
                                 <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel"
@@ -132,10 +135,137 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     
 
-  <script>
-       
+    <script>
+        // Enlazamos el envento CHANGE a la función que acumula imaganes.
+        const inputElement = document.getElementById('images');
+        inputElement.addEventListener('change', handleImageUpload);
 
-  </script>
+        function handleImageUpload(event) {
+            const fileList = event.target.files;
+            var active="active";
+
+            // Recorre cada archivo seleccionado
+            for (let i = 0; i < fileList.length; i++) {
+                const file = fileList[i];
+
+
+                const fileurl = URL.createObjectURL(file);
+
+                const htmlcarrusel = "<div class='carousel-item "+active+"'>"+
+                                     "  <img src='"+fileurl+"' class='d-block w-100' >"+
+                                     "</div>";
+
+                document.getElementById("carrusel").innerHTML+=htmlcarrusel;
+                active="";
+            }
+
+        }
+
+        async function submitForm() {
+            try {
+                // Obtener los valores de los campos del formulario
+                const name = document.getElementById('name').value;
+                const description = document.getElementById('description').value;
+                const dateevent = document.getElementById('dateevent').value;
+                const images = document.getElementById('images').files;
+
+                // Validar campos requeridos
+                if (name === "" || description === "" || dateevent === "") {                
+                    checkrequiredField('name');
+                    checkrequiredField('description') 
+                    checkrequiredField('dateevent');
+                    alert("Por favor, completa todos los campos del formulario.");
+                    return;
+                }
+                var evento = {
+                    Id: 0,
+                    Nombre: name,
+                    Descripcion: description,
+                    FechaEvento: dateevent,
+                    Propietario: 1, // TODO: cambiar por el usuario.
+                    Imagenes: [],
+                    UsuariosRegistrados: []
+                };
+         
+                //const response = await fetch('https://apievent.azurewebsites.net/api/CreateUpdateEvent', {
+                const response = await fetch('https://apievent.azurewebsites.net/api/CreateUpdateEvent', {
+                    method: 'POST',
+                    body:  JSON.stringify(evento),
+                });
+
+                // Manejar la respuesta de la API
+                if (response.ok) {
+                    const result = await response.text();
+                    console.log('Respuesta:', result);
+                    // Agregar las imágenes seleccionadas al FormData
+                    for (let i = 0; i < images.length; i++) {
+                        var nombre = await uploadFile(images[i]);                        
+                        if(nombre!=""){
+                            var imagenes = {                       
+                                EventoId:result,
+                                Principal:true,
+                                RutaImagen:nombre,
+                                Data: images[i]
+                                };
+                            await uploadImage(imagenes);
+                        }
+
+                    }
+                    alert('Evento creado exitosamente.');
+                    window.location.replace('verevento.html?'+result.id);
+                } else {
+                    throw new Error('Error en la solicitud');
+                }
+            } catch (error) {
+                console.error('Error en la solicitud:', error);
+                alert('Error en la solicitud. Por favor, intenta nuevamente.');
+            }
+        }
+        async function uploadImage(imagen) {
+            const response = await fetch("https://apievent.azurewebsites.net/api/CreateUpdateImg", {
+                method: "POST",
+                body: JSON.stringify(imagen),
+            });
+
+            if (response.ok) {
+                console.log("Archivo subido con éxito.");
+            } else {
+                console.error("Error al subir el archivo:", response.status);
+            }
+        }
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const response = await fetch("https://apievent.azurewebsites.net/api/FileUpload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                const result = await response.text();
+                return result;
+            } else {
+                console.error("Error al subir el archivo:", response.status);
+                return "";
+            }
+        }
+
+        
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const repassword = document.getElementById('repassword').value;
+            const errorText = document.getElementById('passwordMatchError');
+
+            if (password === repassword) {
+                errorText.classList.add('d-none');  // Oculta el mensaje de error
+            } else {
+                errorText.classList.remove('d-none');  // Muestra el mensaje de error
+            }
+        }
+
+      
+    </script>
 </body>
 
 </html>

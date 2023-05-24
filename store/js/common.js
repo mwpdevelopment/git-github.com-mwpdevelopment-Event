@@ -3,7 +3,7 @@
 function Load(){
     // comprobamos si la variable de session contiene el usuario, si no es así debemos enviarle de nuevo al index porque no está logueado.
     var user = sessionStorage.getItem("USER");
-  
+  user="USER1";
     if (user=='' || user==null){
         window.location.replace('index.html');
     }
@@ -32,6 +32,7 @@ function Load(){
     }
 }
 
+  
 function checkrequiredField(namefield) {
     // se comprueba que el campo requerido tenga valor, si no es así mostramos un mensaje de error.    
     const fieldText = document.getElementById(namefield).value;
@@ -70,7 +71,7 @@ async function GetEvents(tipo, fecha,user) {
                 "<div class='col-lg-4 col-md-6 col-sm-12'>"+
                 "	<div class='card mb-4' transparente>"+
                 "		<a href='verevento.html?"+data.id+"'>"+
-                "			<img src='./event_Images/"+imagen+"' class='card-img-top' alt='"+data.nombre+"'>"+
+                "			<img src='https://imagenesevent.blob.core.windows.net/event/"+imagen+"' class='card-img-top' alt='"+data.nombre+"'>"+
                 "		</a>"+
                 "		<div class='card-body'>"+
                 "			<a href='verevento.html?"+data.id+"'>"+
