@@ -73,7 +73,8 @@
         </div>
     </div>
     <!-- Enlace al archivo JavaScript de Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
         async function Login() {
             try {   
@@ -101,7 +102,7 @@
                 }
             } catch (error) {
                 console.error('Error en la solicitud:', error);
-                alert('Error en la solicitud. Por favor, intenta nuevamente.');
+                Swal.fire('Error en la solicitud. Por favor, intenta nuevamente.');
             }
         }
     </script>

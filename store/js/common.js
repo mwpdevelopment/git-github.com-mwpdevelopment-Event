@@ -3,7 +3,7 @@
 function Load(){
     // comprobamos si la variable de session contiene el usuario, si no es así debemos enviarle de nuevo al index porque no está logueado.
     var user = sessionStorage.getItem("USER");
-  user="USER1";
+  //user="USER1";
     if (user=='' || user==null){
         window.location.replace('index.html');
     }
@@ -15,12 +15,12 @@ function Load(){
    
     if(window.location.href.includes("miseventos.html"))
     {
-        var today = moment("01/01/00").format('YYYY/MM/DD');
+        var today = moment("01/01/2000").format('YYYY/MM/DD');
         GetEvents(1,today,user);
     }else{
         if(window.location.href.includes("registradoeventos.html"))
         {
-            var today = moment("01/01/00").format('YYYY/MM/DD');
+            var today = moment("01/01/2000").format('YYYY/MM/DD');
             GetEvents(2,today,user);
         }else{
             if(window.location.href.includes("eventos.html"))
@@ -92,7 +92,7 @@ async function GetEvents(tipo, fecha,user) {
         }
     } catch (error) {
         console.error('Error en la solicitud:', error);
-        alert('Error en la solicitud. Por favor, intenta nuevamente.');
+        Swal.fire('Error en la solicitud. Por favor, intenta nuevamente.');
     }
 
 }
