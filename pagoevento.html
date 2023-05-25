@@ -150,9 +150,10 @@
             var user = sessionStorage.getItem("USER");
             var id = location.href.split('?')[1];
 
-           // if(!validateCardNumber()){
-           //     Swal.fire('Error', 'Numero de tarjeta no válido.', 'error');
-           // }
+            if(!validateCardNumber()){
+                Swal.fire('Error', 'Numero de tarjeta no válido.', 'error');
+                return false;
+            }
 
             // Obtener los valores ingresados por el usuario
             var cardNumber = document.getElementById('cardNumber').value;

@@ -80,8 +80,7 @@ async function GetEvents(tipo, fecha,user) {
                 "			<p class='card-text'>"+
                 "				"+data.descripcion+
                 "			</p>"+
-                "			<p class='card-text'>"+data.fechaEvento+"'</p>"+
-                "			<a class='btn btn-primary' href='pagoevento.html?"+data.id+"'>Apuntarse</a>"+
+                "			<p class='card-text'>"+(new Date(data.fechaEvento)).toDateString("DD/MM/YYYY");+"'</p>"+
                 "		</div>"+
                 "	</div>"+
                 "</div>"+
