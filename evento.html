@@ -197,7 +197,7 @@
                     const data = await responseUser.json();
                     console.log('Datos:', data);
 
-                    userid= data[0].nombreUsuario;
+                    userid= data[0].id;
                 }
 
                 var evento = {
@@ -234,7 +234,7 @@
                         }
 
                     }
-                    Swal.fire('Evento creado exitosamente.');
+                    
                     window.location.replace('verevento.html?'+result);
                 } else {
                     Swal.fire('Error en la solicitud. Por favor, intenta nuevamente.');
