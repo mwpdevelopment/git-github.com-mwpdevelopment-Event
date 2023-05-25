@@ -75,31 +75,42 @@
                     <div class="col-lg-12 col-md-12 col-sm-8 col-lg-3 mx-auto">
                         <div class="form-container">
 
-                            <form action="eventos.html">
-                                <div class="title">
-                                    Perfil de Usuario
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label class="mb-2" for="user">Nombre de Usuario</label>
-                                    <input class="form-control " id="user" name="user" disabled="disabled"
-                                        placeholder="Nombre de usuario / NickName" />
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label class="mb-2" for="name">Nombre</label>
-                                    <input class="form-control " id="name" name="name"
-                                        placeholder="Nombre" />
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label class="mb-2" for="surname">Apellidos</label>
-                                    <input class="form-control " id="surname" name="surname"
-                                        placeholder="Apellidos" />
-                                </div>
-                             
-                                <div class="form-group mt-3">
-                                    <button class="btn btn-outline-primary btn-lg w-100 mt-4">Aceptar</button>
-                                </div>
+                            <div class="title">
+                                Datos del Usuario
+                            </div>
+                       
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="user">Nombre de Usuario</label>
+                                <input class="form-control " id="user" name="user" disabled="disabled" />
+                                <p id="error_user" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="name">Nombre</label>
+                                <input class="form-control " id="name" name="name"  placeholder="Nombre" oninput="checkrequiredField('name')"  />
+                                <p id="error_name" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="surname">Apellidos</label>
+                                <input class="form-control " id="surname" name="surname"  placeholder="Apellidos" oninput="checkrequiredField('surname')"  />
+                                <p id="error_surname" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3"></div>
 
-                            </form>
+
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="password">Password</label>
+                                <input class="form-control " id="password" name="password" type="password" oninput="checkrequiredField('password')"  />
+                                <p id="error_password" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label class="mb-2" for="repassword">Repita Password</label>
+                                <input class="form-control " id="repassword" name="repassword" type="password" oninput="checkPasswordMatch()" />
+                                <p id="passwordMatchError" class="text-danger d-none">Las contraseñas no coinciden.</p>
+                            </div>
+                            
+                            <div class="form-group mt-3">
+                                <button class="btn btn-outline-primary btn-lg w-100 mt-4" onclick="submitForm()">Aceptar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,6 +121,80 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
+
+async function submitForm() {
+            try{
+                // Obtener los valores de los campos del formulario
+                const user = document.getElementById('user').value;
+                const name = document.getElementById('name').value;
+                const surname = document.getElementById('surname').value;
+                const password = document.getElementById('password').value;
+                if(!checkPasswordMatch()){
+                    return false;
+                }
+                if(name =="" | surname=="" | password==""){
+                    checkrequiredField('name') 
+                    checkrequiredField('surname');
+                    checkrequiredField('password');
+                    Swal.fire("Error en el formulario del registro.");
+                }else{
+                    // Crear el objeto de datos a enviar a la API
+                    const data = {
+                        nombreusuario: user,
+                        nombre: name,
+                        apellido: surname,
+                        clave: password
+                    };
+        
+                    // Realizar la llamada a la API por POST utilizando fetch o una librería como axios
+                    const response = await fetch('https://apievent.azurewebsites.net/api/CreateUpdateUser', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    // Manejar la respuesta de la API
+                    if (response.ok) {
+
+                        const result = await response.text();                    
+                        console.log('Respuesta:', result);
+
+                        if(result==-1){
+                            Swal.fire('El usuario ya existe');
+                        }else{
+                            sessionStorage.setItem("USER",user);
+                            window.location.replace('eventos.html');
+                        }
+                    } else {
+                        Swal.fire('Error en la solicitud');
+                    }
+                }
+                
+            }            
+
+            catch(error) {                
+                console.error('Error en la solicitud:', error);
+                Swal.fire('Error en la solicitud. Por favor, intenta nuevamente.');
+                
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('password').value;
+            const repassword = document.getElementById('repassword').value;
+            const errorText = document.getElementById('passwordMatchError');
+
+            if (password === repassword) {
+                errorText.classList.add('d-none');  // Oculta el mensaje de error
+                return true;
+            } else {
+                errorText.classList.remove('d-none');  // Muestra el mensaje de error
+                return false;
+            }
+        }
+        
         async function getData() {
             try {
                 // Obtener el valor de la cookie "EVENTUSER"

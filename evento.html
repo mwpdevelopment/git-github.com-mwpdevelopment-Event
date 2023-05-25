@@ -98,6 +98,12 @@
                                 <p id="error_dateevent" class="text-danger d-none">Campo requerido.</p>
                             </div>
                             <div class="form-group mt-3">
+                                <label class="mb-2" for="precio">Precio</label>
+                                <input class="form-control " id="precio" name="precio" oninput="checkrequiredField('dateevent')"
+                                    type="number" />
+                                <p id="error_precio" class="text-danger d-none">Campo requerido.</p>
+                            </div>
+                            <div class="form-group mt-3">
                                 <label class="mb-2">Imágenes</label>
                                 <input type="file" class="form-control-file" id="images" name="images" capture multiple />
                                 <small class="form-text text-muted">Selecciona una o varias imágenes para el
@@ -171,13 +177,15 @@
                 const name = document.getElementById('name').value;
                 const description = document.getElementById('description').value;
                 const dateevent = document.getElementById('dateevent').value;
+                const precio = document.getElementById('precio').value;
                 const images = document.getElementById('images').files;
 
                 // Validar campos requeridos
-                if (name === "" || description === "" || dateevent === "") {                
+                if (name === "" || description === "" || dateevent === ""|| precio === "") {                
                     checkrequiredField('name');
                     checkrequiredField('description') 
                     checkrequiredField('dateevent');
+                    checkrequiredField('precio');
                     Swal.fire("Por favor, completa todos los campos del formulario.");
                     return;
                 }
@@ -202,6 +210,7 @@
 
                 var evento = {
                     Id: 0,
+                    precio: precio,
                     Nombre: name,
                     Descripcion: description,
                     FechaEvento: dateevent,

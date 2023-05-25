@@ -92,7 +92,8 @@
                     <h5 class="card-title" id="nombre"></h5>
                     <p class="card-text" id="descripcion"></p>
                     <p class="card-text" id="fecha"></p>
-                    
+
+                    <p class='card-text' id="precio"></p>
                     
                   </div>
                 </div>
@@ -153,6 +154,7 @@
                   }
                   document.getElementById("nombre").innerHTML=data.nombre;
                   document.getElementById("descripcion").innerHTML=data.descripcion;
+                  document.getElementById("precio").innerHTML="<p class='card-text'>Precio: "+data.precio+" €</p>";
                   document.getElementById("fecha").innerHTML=(new Date(data.fechaEvento)).toDateString("DD/MM/YYYY");
                   document.getElementById("card-body").innerHTML+="<a class='btn btn-primary' href='pagoevento.html?"+data.id+"'>Apuntarse</a>";
                 
