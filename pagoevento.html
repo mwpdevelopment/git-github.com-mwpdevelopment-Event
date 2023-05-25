@@ -188,7 +188,7 @@
             if (response.ok) {
                 const result = await response.text();
                 console.log('Respuesta:', result);
-                Swal.fire('Evento creado exitosamente.');
+              
                 // para evitar el Hackeo se pasa por session.
                 sessionStorage.setItem("QR",result);
                 window.location.replace('qrevento.html');    

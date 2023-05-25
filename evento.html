@@ -193,8 +193,8 @@
                 });
 
                 // Manejar la respuesta de la API
-                if (response.ok) {
-                    const data = await response.json();
+                if (responseUser.ok) {
+                    const data = await responseUser.json();
                     console.log('Datos:', data);
 
                     userid= data[0].nombreUsuario;
