@@ -181,7 +181,7 @@
                     Swal.fire("Por favor, completa todos los campos del formulario.");
                     return;
                 }
-                var name = sessionStorage.getItem("USER");
+                
     
                 // Realizar la llamada a la API para obtener los datos
                 const responseUser = await fetch(`https://apievent.azurewebsites.net/api/GetUser?name=${encodeURIComponent(nameuser)}`, {
