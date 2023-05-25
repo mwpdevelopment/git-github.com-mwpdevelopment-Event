@@ -19,7 +19,7 @@
     </style>
 </head>
 
-<body onload="Load();">
+<body onload="Load(); GenerarQR();">
      <!--NAVEGACION-->
      <div class="menu">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -88,53 +88,18 @@
 
     <script>
       
-            event.preventDefault(); // Evitar el envío del formulario
-
-            // Obtener el número de tarjeta ingresado por el usuario
-            var cardNumber = document.getElementById('cardNumber').value;
-
-            // Eliminar los espacios en blanco y los guiones del número de tarjeta
-            cardNumber = cardNumber.replace(/\s+/g, '').replace(/-/g, '');
-
-            // Validar si el número de tarjeta está compuesto únicamente por dígitos
-            if (!/^\d+$/.test(cardNumber)) {
-                Swal.fire('Error', 'El número de tarjeta debe contener solo dígitos', 'error');
-                return;
-            }
-
-            // Aplicar el algoritmo de Luhn para validar el número de tarjeta
-            var sum = 0;
-            var isEven = false;
-            for (var i = cardNumber.length - 1; i >= 0; i--) {
-                var digit = parseInt(cardNumber.charAt(i), 10);
-                if (isEven) {
-                digit *= 2;
-                if (digit > 9) {
-                    digit -= 9;
-                }
-                }
-                sum += digit;
-                isEven = !isEven;
-            }
-
-            // Comprobar si el número de tarjeta es válido
-            if (sum % 10 !== 0) {
-                Swal.fire('Error', 'El número de tarjeta no es válido', 'error');
-            } else {
-                Swal.fire('Éxito', 'El número de tarjeta es válido', 'success');
-            }
-        }
 
     function GenerarQR(){
+        
             // Obtén una referencia al elemento HTML donde se mostrará el código QR
         var codigoQRDiv = document.getElementById("codigoQR");
-        var user = sessionStorage.getItem("USER");
+        var qr = sessionStorage.getItem("QR");
         // Crea una instancia del generador de código QR
         var qrCode = new QRCode(codigoQRDiv, {
 
-            text: "https://www.ejemplo.com", // El texto o enlace que se convertirá en el código QR
-            width: 128, // Ancho del código QR (en píxeles)
-            height: 128 // Alto del código QR (en píxeles)
+            text: qr, // El texto o enlace que se convertirá en el código QR
+            width: 300, // Ancho del código QR (en píxeles)
+            height: 300 // Alto del código QR (en píxeles)
         });
     }
           
